@@ -4,6 +4,12 @@
   by PE1HVH 
   Date; 14-11-2024
   Used hardware as describe at  https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadget  
+  Choise between USB Mouse or USB Keyboard emulation.
+
+  After adding the interface to a computer USB port, the program wait for a initial key press
+  The first pressed by the morse key (Using a manipulator,  both paddles can be used).
+   - less than a 1/2 second => mouse
+   - more than a 1/2 second => keyboard  
 */  
 /*****************************************************/
 
@@ -14,7 +20,8 @@
 #include "Keyboard.h"
 #include "Mouse.h"
 
-#define inPin   6
+#define inPin6   6
+#define inPin7   7
 
 /****************************************************/
 /* Globals                                          */
@@ -22,7 +29,7 @@
 byte outputType       = 0;    // output means interface behavior 1=mouse 2=keyboard
 
 /****************************************************/
-/* @brief Initalise keyboard library                             */
+/* @brief Initalise keyboard library                */
 /****************************************************/
 void setKeyboard(){
   outputType=2;
@@ -59,52 +66,66 @@ void stopOutput(){
   }     
 }
 
+/*********************************************/
+/* @brief Calculation of key pressed   
+   @return key press duration in milliseconds
+*/
+/*********************************************/ 
+ unsigned long getKeyPressDuration() {
+    unsigned long keyPressStartTime = 0;
+   
+    while (digitalRead(inPin6) == HIGH && digitalRead(inPin7)==HIGH) {
+      //key is not Pressed
+      delay(20);                // simple method against bouncing
+    }
+    // Key pressed, record the start time
+    keyPressStartTime = millis();
+    
+    // Wait for the Key to be released
+    while (digitalRead(inPin6) == LOW || digitalRead(inPin7) == LOW) {
+      // Key still pressed, keep waiting
+      delay(20);                // simple method against bouncing
+    }
+    
+    // Key released, calculate the duration
+    return (millis() - keyPressStartTime);  
+ }    
+
 /******************************************/
-/* @brief SetUp: read time pressed morse key 
+/* @brief SetUp:  
+   - first time pressed morse key 
    - less than a 1/2 second => mouse
    - more than a 1/2 second => keyboard  
 */
 /******************************************/
 void setup() {
-  pinMode(inPin, INPUT_PULLUP);
-  unsigned long keyPressStartTime = 0;
+  pinMode(inPin6, INPUT_PULLUP);
+  pinMode(inPin7, INPUT_PULLUP);
+  
   unsigned long keyPressDuration = 0;
 
-  while (digitalRead(inPin) == HIGH) {
-    //key is not Pressed
-    delay(20);
-  }
-  // Key pressed, record the start time
-  keyPressStartTime = millis();
-  
-  // Wait for the Key to be released
-  while (digitalRead(inPin) == LOW) {
-    delay(20);
-    // Key still pressed, keep waiting
-  }
-  
-  // Key released, calculate the duration
-  keyPressDuration = millis() - keyPressStartTime;  
-
+  keyPressDuration = getKeyPressDuration();  
   // Determine which usb output (mouse or keyboard)
   if(keyPressDuration > 0 && keyPressDuration < 500) {
     setMouse();
   } else {
     setKeyboard();
   }
-}        
+}   
 
 /****************************************************/
 /* @brief loop 
-   1. Determine the status op pin6 
-   2. Use Keyboard spacebar or left mouseclick      */
+   1. Determine the status of pin6 and pin 7
+   2. Use Keyboard spacebar or left mouseclick      
+*/
 /****************************************************/
 void loop(){
-   int pinState = digitalRead(inPin);
+   int pinState6 = digitalRead(inPin6);
+   int pinState7 = digitalRead(inPin7);
  
-   if(pinState == LOW) {  //pin==LOW  => is closed (activated )
+   if(pinState6 == LOW || pinState7 == LOW )  {  //pin==LOW  => is closed (activated )
       startOutput();
-   } else {               //pin==HIGH => is open ( deactived )
+   } else {                                      //pin==HIGH => is open ( deactived )
       stopOutput(); 
    }
 }

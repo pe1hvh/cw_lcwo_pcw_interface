@@ -19,6 +19,7 @@ Morse Code Interface for LCWO and PCWFistCheck
   In the intial setup the program wait for an input sign. Depending on an the input of your morse key it will used 
   a. Make a signal for 1/2 second or mote , the space bare is used (LCWO)
   b. Make a signal for less than a 1/2 seconds left mouse is used (PCWFistCheck)
+  By using a manipulator both paddles can be used for making the choice.
   
   PlatformIO
   ----------
@@ -42,4 +43,4 @@ Morse Code Interface for LCWO and PCWFistCheck
   To avoid compatibility issues, the source is saved as an arduino.ino file
   
 
-  
+  ` 
