@@ -56,13 +56,13 @@ void stopOutput(){
      Keyboard.releaseAll();
   } else {
      Mouse.release();
-  }  
+  }     
 }
 
 /******************************************/
 /* @brief SetUp: read time pressed morse key 
-   - less than a second => mouse
-   - more than a second => keyboard  
+   - less than a 1/2 second => mouse
+   - more than a 1/2 second => keyboard  
 */
 /******************************************/
 void setup() {
@@ -72,12 +72,14 @@ void setup() {
 
   while (digitalRead(inPin) == HIGH) {
     //key is not Pressed
+    delay(20);
   }
   // Key pressed, record the start time
   keyPressStartTime = millis();
   
   // Wait for the Key to be released
   while (digitalRead(inPin) == LOW) {
+    delay(20);
     // Key still pressed, keep waiting
   }
   
@@ -85,7 +87,7 @@ void setup() {
   keyPressDuration = millis() - keyPressStartTime;  
 
   // Determine which usb output (mouse or keyboard)
-  if(keyPressDuration > 50 && keyPressDuration < 900) {
+  if(keyPressDuration > 0 && keyPressDuration < 500) {
     setMouse();
   } else {
     setKeyboard();
