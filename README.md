@@ -12,9 +12,9 @@ This software give the already build interface an other goal. Which I think I wi
 Related Websites
 ---------------
 
-- [For STL files and SeeeduinoXIAO pinout description][https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet]
-- [Learn CW Online][https://www.lcwo.net]
-- [PCWFistCheck][https://www.qsl.net/dj7hs/download.htm]
+- [For STL files and SeeeduinoXIAO pinout description](https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet)
+- [Learn CW Online](https://www.lcwo.net)
+- [PCWFistCheck](https://www.qsl.net/dj7hs/download.htm)
 
 Description
 ---------------
@@ -54,3 +54,6 @@ Build and Upload is tested also with Arduino IDE 2.3 and Arduino 1.8.19.
  
 ##Compatible
 To avoid compatibility issues, the source is saved as an arduino.ino file.
+
+[PE1HVH ](https://www.pe1hvh.nl)
+
