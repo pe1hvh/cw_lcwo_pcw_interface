@@ -52,7 +52,9 @@ Build and Upload is tested also with Arduino IDE 2.3 and Arduino 1.8.19.
 | **Swiper**       |  &check;         | &check;  | &check;      |
 | **Paddle**       |  &check;         | &check;  | &check;      |
  
-##Compatible
+Compatible
+---------------
+
 To avoid compatibility issues, the source is saved as an arduino.ino file.
 
 [PE1HVH ](https://www.pe1hvh.nl)
