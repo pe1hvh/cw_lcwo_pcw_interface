@@ -32,19 +32,22 @@ PlatformIO
 Almost all my software is build with Visual Code. For the Arduino PlatformIO plugin is installed,
   
 PlatformIO requires that functions be declared before they are called in the code. This is because PlatformIO uses a more standard C++ compilation process,
-which adheres strictly to the requirement that functions must be declared before use.
+which adheres strictly to the requirement that functions must be declared before use. For compatiblity reasons testing is also done from the Arduino IDE and 
+the source is save from the Arduino IDE.
 
 SonarLint
 ---------------
 
 For writing cleancode, the Sonarlint plug-in is installed in Visual Code. 
 SonarLint is an open-source code analysis tool that serves several important functions to help developers write cleaner, safer, and higher-quality code. 
-There is no need, for using all sonarlint rules but the most important are enabled.
+There is no need, for using all sonarlint rules but the most important are enabled. 
   
 Tested
 ---------------
 
-Build and Upload is tested also with Arduino IDE 2.3 and Arduino 1.8.19. 
+Build and Upload is tested also with Arduino IDE 2.3 and Arduino 1.8.19.
+
+For software test see table;
 
 | **Key**          | **PCWFictCheck** | **LCWO** | **ResultOK** |
 |------------------|:----------------:|:--------:|:------------:|
@@ -52,10 +55,7 @@ Build and Upload is tested also with Arduino IDE 2.3 and Arduino 1.8.19.
 | **Swiper**       |  &check;         | &check;  | &check;      |
 | **Paddle**       |  &check;         | &check;  | &check;      |
  
-Compatible
----------------
 
-To avoid compatibility issues, the source is saved as an arduino.ino file.
 
-[PE1HVH ](https://www.pe1hvh.nl)
+73 [PE1HVH ](https://www.pe1hvh.nl)
 
