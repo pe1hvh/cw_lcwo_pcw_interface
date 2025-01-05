@@ -29,7 +29,8 @@ Building Interface and STL file
 -------------------------------
 
 ![image](https://github.com/user-attachments/assets/a70af94d-3476-4010-a6d7-b5e995f13cb8)
-The STL files for the 3d printed Seeduino case, and the pinout description you will found on [morse-code-usbhid-interface-the-gadet](https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet)
+
+The STL files for the 3d printed Seeeduino case, and the pinout description you will found on [morse-code-usbhid-interface-the-gadet](https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet)
 
 
 
