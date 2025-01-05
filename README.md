@@ -12,7 +12,6 @@ This software give the already build interface an other goal. Which I think I wi
 Related Websites
 ---------------
 
-- [For STL files and SeeeduinoXIAO pinout description](https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet)
 - [Learn CW Online](https://www.lcwo.net)
 - [PCWFistCheck](https://www.qsl.net/dj7hs/download.htm)
 
@@ -25,6 +24,14 @@ Press the mors key;
 - for less than a 1/2 seconds left mouse is used (PCWFistCheck)
 - for 1/2 second or more , the space bare is used (LCWO)
 By using a manipulator both paddles can be used for making the choice.
+
+Building Interface and STL file
+-------------------------------
+
+![image](https://github.com/user-attachments/assets/a70af94d-3476-4010-a6d7-b5e995f13cb8)
+The STL files for the 3d printed Seeduino case, and the pinout description you will found on [morse-code-usbhid-interface-the-gadet](https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadet)
+
+
 
 Use Smart Phone to Key CW Morse
 -------------------------------
