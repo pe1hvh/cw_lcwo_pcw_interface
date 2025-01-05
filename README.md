@@ -26,10 +26,9 @@ Press the mors key;
 - for 1/2 second or more , the space bare is used (LCWO)
 By using a manipulator both paddles can be used for making the choice.
 
-Using on your smartphone
-------------------------
-Connect the Seeeduino to your phone and you can also use the tx function of www.lcwo.net on your phone. First navigate to this function and then connect the seeduino.
-cw_lcwo_pcw_interface_test_op_smartphone.jpeg
+Use Smart Phone to Key CW Morse
+-------------------------------
+Connect the Seeeduino to your phone and you can also use the tx function of www.lcwo.net on your phone with your prefered morse key.  First navigate to this function and then connect the seeduino.
 ![image](https://github.com/user-attachments/assets/2a77f970-697b-4497-9fc2-f78e8dddcc48)
 
   
