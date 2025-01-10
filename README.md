@@ -61,7 +61,9 @@ For software test see table;
 | **Swiper**       |  &check;         | &check;  | &check;      |
 | **Paddle**       |  &check;         | &check;  | &check;      |
  
-
+Notes and Warnings
+---------------
+When you use the Keyboard.print() or Keyboard.press() command, the Arduino board takes over your keyboard! Make sure you have control before you use the command. A pushbutton to toggle the keyboard control state is effective.
 
 73 [PE1HVH ](https://www.pe1hvh.nl)
 
