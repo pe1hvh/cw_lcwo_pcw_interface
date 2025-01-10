@@ -16,11 +16,7 @@
   The first pressed by the morse key (Using a manipulator,  both paddles can be used).
    - less than a 1/2 second => mouse lef tbutton (for TX on PCWFistcheck)
    - more than a 1/2 second => keyboard space bar (for TX on www.lcwo.net)
-   - more than 2 seconds    => keyboard (the morse key as keyboard)  
 
-  The original code of the keyboard handler is based on a sketch of  
-   Barnacle Budd's Morse Code Decoder v. 0.1
-   (c) 2011, Budd Churchward - WB7FHC
 
    Notes and Warnings
 
