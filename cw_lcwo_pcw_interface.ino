@@ -1,12 +1,16 @@
 /******************************************************/
 /* 
-  LCWO PCWFistCheck Interface with a SeeeduinoXIAO.
-  by PE1HVH 
-  version 2
-  Date; 10-01-2025
+       Title:   LCWO PCWFistCheck Interface with a SeeeduinoXIAO.
+      Author:   JA van Hernen, www.pe1hvh.nl
+        Date:   10 Jan 2025
+    Hardware:   Seeeduino XIAO samd
+         IDE:   Arduino IDE 1.8.19
+       Legal:   Copyright (c) 2025  JA van Hernen.
+                Open Source under the terms of the MIT License. 
+    
+ Description:   
   
-  Used hardware as describe at  https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadget  
-  Choise between USB Mouse or USB Keyboard emulation.
+  For a STL file see and pin connection https://hackaday.io/project/184702-morse-code-usbhid-interface-the-gadget  
   
   Add Seeeduino to your Arduino IDE
         Click on File > Preference, and fill Additional Boards Manager URLs with the url below:
@@ -18,14 +22,12 @@
    - more than a 1/2 second => keyboard space bar (for TX on www.lcwo.net)
    - more than 2 seconds    => keyboard (the morse key as keyboard)  
 
-  The original code of the keyboard handler is based on a sketch of  
-   Barnacle Budd's Morse Code Decoder v. 0.1
-   (c) 2011, Budd Churchward - WB7FHC
-
    Notes and Warnings
 
    When you use the Keyboard.print() command, the Arduino takes over your keyboard! 
    Make sure you have control before you use the command. 
+
+               >> THIS VERSION UNDER DEVELOPMENT <<<
 
 */  
 /*****************************************************/
@@ -198,7 +200,7 @@ class KeyboardHandler : public BaseHandler {
          Keyboard.begin();
          writeInitMessage();     
     
-    }
+     }
     
     void handleMorseKey(int pinState6 ,int pinState7) override {
 
@@ -208,7 +210,7 @@ class KeyboardHandler : public BaseHandler {
                keyIsUp();
             }  
         
-    }
+     }
 
   private:  
 
@@ -316,12 +318,13 @@ class KeyboardHandler : public BaseHandler {
             dit = averageDah / 3;                    // normal dit would be this
             dit = dit * 2;          // Double it to get the threshold between dits and dahs
           }
-        }
+    }
 
+    
     /*****************************************************/
     /* @brief Print the Char                             */
     /*****************************************************/
-      void printCharacter()  {           
+    void printCharacter()  {           
         justDid = false;       // OK to print a space again after this
        
         // Punctuation marks will make a BIG myNum
@@ -333,7 +336,7 @@ class KeyboardHandler : public BaseHandler {
 
         sendToScreen(*mySet[myNum]);
  
-      }
+    }
 
       
     /*****************************************************/
@@ -354,21 +357,21 @@ class KeyboardHandler : public BaseHandler {
         if (letterCount < 20)  { 
           sendToScreen(' ');                // go figure out where to put it on the display
         }
-      }
+    }
       
     /*****************************************************/
     /* @brief Print the Puctuation                       */
     /*****************************************************/ 
-      void printPunctuation()   {
+    void printPunctuation()   {
         // Punctuation marks are made up of more dits and dahs than
         // letters and numbers. Rather than extend the character array
         // out to reach these higher numbers we will simply check for
         // them here. This function only gets called when myNum is greater than 116
         char printChar = '#';    // Should not get here     
        
-        if(myNum == 246) {
-           printChar = '$';
-        }
+       if(myNum == 246) {
+             printChar = '$';
+       }
         
         sendToScreen(printChar);          // Go figure out where to put it on the display
       }
@@ -386,6 +389,9 @@ class KeyboardHandler : public BaseHandler {
         }
         Keyboard.releaseAll();
       }
+
+
+      
     /*****************************************************/
     /* @brief reset of all important variabelen          */
     /*****************************************************/   
