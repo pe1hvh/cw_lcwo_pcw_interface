@@ -38,24 +38,8 @@ Use Smart Phone to Key CW Morse
 -------------------------------
 Connect the Seeeduino to your phone and you can also use the tx function of www.lcwo.net on your phone with your prefered morse key.  First navigate to this function and then connect the seeduino.
 ![image](https://github.com/user-attachments/assets/2a77f970-697b-4497-9fc2-f78e8dddcc48)
-
   
-PlatformIO
----------------
 
-Almost all my software is build with Visual Code. For the Arduino PlatformIO plugin is installed,
-  
-PlatformIO requires that functions be declared before they are called in the code. This is because PlatformIO uses a more standard C++ compilation process,
-which adheres strictly to the requirement that functions must be declared before use. For compatiblity reasons testing is also done from the Arduino IDE and 
-the source is save from the Arduino IDE.
-
-SonarLint
----------------
-
-For writing cleancode, the Sonarlint plug-in is installed in Visual Code. 
-SonarLint is an open-source code analysis tool that serves several important functions to help developers write cleaner, safer, and higher-quality code. 
-There is no need, for using all sonarlint rules but the most important are enabled. 
-  
 Tested
 ---------------
 
