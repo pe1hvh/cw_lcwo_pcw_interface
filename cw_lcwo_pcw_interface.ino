@@ -4,6 +4,7 @@
       Author:   JA van Hernen, www.pe1hvh.nl
         Date:   10 Jan 2025
     Hardware:   Seeeduino XIAO samd
+     Version:   3.0   
          IDE:   Arduino IDE 1.8.19
        Legal:   Copyright (c) 2025  JA van Hernen.
                 Open Source under the terms of the MIT License. 
@@ -22,12 +23,13 @@
    - more than a 1/2 second => keyboard space bar (for TX on www.lcwo.net)
    - more than 2 seconds    => keyboard (the morse key as keyboard)  
 
-   Notes and Warnings
+ Notes and Warnings:
 
    When you use the Keyboard.print() command, the Arduino takes over your keyboard! 
    Make sure you have control before you use the command. 
 
-               >> THIS VERSION UNDER DEVELOPMENT <<<
+   
+           >>>>>> THIS VERSION UNDER DEVELOPMENT AND NEED SOME MAINTAINCE <<<<<<
 
 */  
 /*****************************************************/
@@ -71,7 +73,7 @@ class BaseHandler {
 
   public:
 
-    virtual void handleMorseKey(int pinState6 ,int pinState7) = 0;
+    virtual void handleMorseKey(int pinDot ,int pinDash) = 0;
     virtual void initHandler() = 0;
 
   private:
@@ -94,10 +96,10 @@ class MouseHandler : public BaseHandler {
              Mouse.begin();
          }
 
-    void handleMorseKey(int pinState6 ,int pinState7) override {
-             if(pinState6 == LOW || pinState7 == LOW )  { //pin==LOW  => is closed (activated )
+    void handleMorseKey(int pinDot ,int pinDash) override {
+             if(pinDot == LOW || pinDash == LOW )  { //pin==LOW  => is closed (activated )
                  keyIsDown();
-              } else {                                    //pin==HIGH => is open ( deactived )
+              } else {                               //pin==HIGH => is open ( deactived )
                  keyIsUp();
               }  
            }
@@ -126,11 +128,10 @@ class SpaceBarHandler : public BaseHandler {
             Keyboard.begin();
         }
 
-
-    void handleMorseKey(int pinState6 ,int pinState7) override {
-             if(pinState6 == LOW || pinState7 == LOW )  {  //pin==LOW  => is closed (activated )
+    void handleMorseKey(int pinDot ,int pinDash) override {
+             if(pinDot == LOW || pinDash == LOW )  { //pin==LOW  => is closed (activated )
                  keyIsDown();
-              } else {                                    //pin==HIGH => is open ( deactived )
+              } else {                               //pin==HIGH => is open ( deactived )
                  keyIsUp();
               }  
            }
@@ -202,16 +203,14 @@ class KeyboardHandler : public BaseHandler {
     
      }
     
-    void handleMorseKey(int pinState6 ,int pinState7) override {
-
-           if(pinState6 == LOW || pinState7 == LOW )  {  //pin==LOW  => is closed (activated )
-               keyIsDown();
-            } else {                                     //pin==HIGH => is open ( deactived )
-               keyIsUp();
-            }  
-        
-     }
-
+    void handleMorseKey(int pinDot ,int pinDash) override {
+             if(pinDot == LOW || pinDash == LOW )  { //pin==LOW  => is closed (activated )
+                 keyIsDown();
+              } else {                               //pin==HIGH => is open ( deactived )
+                 keyIsUp();
+              }  
+           }
+           
   private:  
 
     
@@ -408,35 +407,54 @@ class KeyboardHandler : public BaseHandler {
       }
 };
 
-BaseHandler* myObjectHandler = nullptr;
-
-
-
-
 /*********************************************/
-/* @brief Calculation of key pressed   
-   @return key press duration in milliseconds
-*/
+/* @brief Calculation of key pressed         */
 /*********************************************/ 
- unsigned long getKeyPressDuration() {
+class Timer {
+  
+  private:
+    
     unsigned long keyPressStartTime = 0;
-   
-    while (digitalRead(inPin6) == HIGH && digitalRead(inPin7)==HIGH) {
-      //key is not Pressed
-      delay(25);                // simple method against bouncing
+    unsigned long keyPressDuration  = 0;
+
+  public:
+  
+    /******************************************/
+    /* @brief The constructor                 */   
+    /******************************************/
+    Timer() {
+         while (digitalRead(inPin6) == HIGH && digitalRead(inPin7)==HIGH) {
+            //key is not Pressed
+            delay(25);                // simple method against bouncing
+         }
+         // Key pressed, record the start time
+         keyPressStartTime = millis();
+          
+         // Wait for the Key to be released
+         while (digitalRead(inPin6) == LOW || digitalRead(inPin7) == LOW) {
+            // Key still pressed, keep waiting
+            delay(25);                // simple method against bouncing
+         }
+          
+         // Key released, calculate the duration
+         keyPressDuration = (millis() - keyPressStartTime);  
     }
-    // Key pressed, record the start time
-    keyPressStartTime = millis();
-    
-    // Wait for the Key to be released
-    while (digitalRead(inPin6) == LOW || digitalRead(inPin7) == LOW) {
-      // Key still pressed, keep waiting
-      delay(25);                // simple method against bouncing
+
+    /******************************************/
+    /* @brief The getter for keyPressDuration */   
+    /******************************************/
+    unsigned long getKeyPressDuration(){
+         return keyPressDuration;
     }
-    
-    // Key released, calculate the duration
-    return (millis() - keyPressStartTime);  
- }    
+          
+};
+
+
+BaseHandler* myObjectHandler = nullptr;  // Declare the pointer to the BaseHandler class and initialize it to nullptr
+                                         // myObjectHandler is the pointer that hold the address of a BaseHandler object.
+                                         // it is initiazed to nullptr, meaning it currently do not point (now) to any object
+
+
 
 
 
@@ -450,24 +468,20 @@ BaseHandler* myObjectHandler = nullptr;
 /******************************************/
 void setup() {
   
-  pinMode(inPin6, INPUT_PULLUP);
-  pinMode(inPin7, INPUT_PULLUP);
+  pinMode(inPin6, INPUT_PULLUP); // straight key
+  pinMode(inPin7, INPUT_PULLUP); // swiper or paddle
   
-  unsigned long keyPressDuration = 0;
-
-  keyPressDuration = getKeyPressDuration();  
-  // Determine which usb output (mouse or keyboard)
+  Timer  myTimer;                // Declare the object myTimer of type Timer
   
-  if(keyPressDuration > 0 && keyPressDuration < 500) {
+  if(myTimer.getKeyPressDuration() > 0 && myTimer.getKeyPressDuration()  < 500) {
      myObjectHandler = new MouseHandler();
-  } else if(keyPressDuration > 4000) {
+  } else if (myTimer.getKeyPressDuration()  > 5000){
      myObjectHandler = new KeyboardHandler();
   } else {
      myObjectHandler = new SpaceBarHandler();
-  }
+  }   
   myObjectHandler->initHandler();
-}    
-
+}
 
 
 /****************************************************/

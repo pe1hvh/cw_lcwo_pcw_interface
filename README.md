@@ -55,7 +55,7 @@ For software test see table;
 | **Swiper**       |  &check;         | &check;  | &check;      |
 | **Paddle**       |  &check;         | &check;  | &check;      |
  
-
+           >>>>>> THIS VERSION UNDER DEVELOPMENT AND NEED SOME MAINTAINCE <<<<<<
 
 73 [PE1HVH ](https://www.pe1hvh.nl)
 
