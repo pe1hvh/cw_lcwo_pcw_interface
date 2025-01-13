@@ -7,7 +7,7 @@ Introduction
 More than a year ago I have build the Morse Code USB/HID Interface (The Gadget). But after some testing never used.
 
 This software give the already build interface an other goal. Which I think I will used more.
- It's now a simple interface for using the transmitting practice from LCWO end as interface for PCWFistCheck
+ It's now a simple interface for using the transmitting practice from LCWO and as interface for PCWFistCheck
   
 Related Websites
 ---------------
