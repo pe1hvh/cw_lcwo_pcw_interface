@@ -21,7 +21,7 @@
   The first pressed by the morse key (Using a manipulator,  both paddles can be used).
    - less than a 1/2 second => mouse lef tbutton (for TX on PCWFistcheck)
    - more than a 1/2 second => keyboard space bar (for TX on www.lcwo.net)
-   - more than 2 seconds    => keyboard (the morse key as keyboard)  
+   - more than 2 seconds    => Morse to the Web page  
 
  Notes and Warnings:
 
@@ -41,29 +41,19 @@
 #include <Arduino.h>
 #include <Keyboard.h>
 #include <Mouse.h>
+#include <SimpleWebSerial.h>
+#include <FlashStorage.h>
 
 #define inPin6   6
 #define inPin7   7
 
 #define KEY_SPACE_BAR 0x20
 
-      // The place a letter appears here matches the value we pars
-      //                                     0    1    2    3    4    5    6    7    8    9
-     static constexpr char mySet[116][3]=  {"#", "#", "T", "E", "M", "N", "A", "I", "O", "G", //  00 -  9
-                                            "K", "D", "W", "R", "U", "S", "#", "#", "Q", "Z", //  10 - 19
-                                            "Y", "C", "X", "B", "J", "P", "#", "L", "#", "F", //  20 - 29
-                                            "V", "H", "0", "9", "#", "8", "#", "#", "#", "7", //  30 - 39
-                                            "#", "#", "#", "#", "#", "#", "#", "6", "1", "#", //  40 - 49
-                                            "#", "#", "#", "#", "#", "#", "2", "#", "#", "#", //  50 - 59
-                                            "3", "#", "4", "5", "#", "#", "#", "#", "#", "#", //  60 - 69
-                                            "#", ":", "#", "#", "#", "#", ",", "#", "#", "#", //  70 - 79
-                                            "#", "#", "#", "#", "!", "#", "#", "#", "#", "#", //  80 - 89
-                                            "#", "#", "#", "#", "-", "#", "#", "'", "#", "#", //  90 - 99
-                                            "#", "@", "#", "#", "#", "#", ".", "#", "#", "#", // 100 -109
-                                            "#", "#", "#", "#", "#", "?" };                   // 110 -115
-
+//                       10        20        30        40        50        60        70        80        90        100       110
+//             0123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 123456789 12345
+char mySet[] =" #TEMNAIOGKDWRUS##QZYCXBJP#L#FVH09#8###7#######61#######2###3#45#######:####,#######!#########-##'###@####.########?";
                                        
-                                       
+SimpleWebSerial WebSerial;                                       
 
 /*****************************************************/
 /* @brief The BaseHandler                            */
@@ -151,9 +141,9 @@ class SpaceBarHandler : public BaseHandler {
 
 
 /*****************************************************/
-/* @brief The Keyboard Handler                       */
+/* @brief MorseDecoder                               */
 /*****************************************************/
-class KeyboardHandler : public BaseHandler {
+class MorseDecoder : public BaseHandler {
   
   private:
   
@@ -198,7 +188,9 @@ class KeyboardHandler : public BaseHandler {
   public:
 
      void initHandler() override {
-         Keyboard.begin();
+         Serial.begin(115200);
+         while(!Serial);
+         delay(200); 
          writeInitMessage();     
     
      }
@@ -213,11 +205,10 @@ class KeyboardHandler : public BaseHandler {
            
   private:  
 
-    
     void writeInitMessage() {
-           Keyboard.print("Morse CW text writer");   
-           delay(2000);
-           Keyboard.releaseAll();
+         delay(50);
+         WebSerial.send("cw_log", "Morse CW text writer\n");  
+         delay(2000);
     }
 
 
@@ -326,19 +317,12 @@ class KeyboardHandler : public BaseHandler {
     void printCharacter()  {           
         justDid = false;       // OK to print a space again after this
        
-        // Punctuation marks will make a BIG myNum
-        if (myNum > 115)  {  
-          printPunctuation();   // The value we parsed is bigger than our character array
-                                // It is probably a punctuation mark so go figure it out.
-          return;               // Go back to the main loop(), we're done here.
-        }
-
-        sendToScreen(*mySet[myNum]);
+       
+        sendToScreen(myNum);
  
     }
 
-      
-    /*****************************************************/
+      /*****************************************************/
     /* @brief Print the Space                            */
     /*****************************************************/   
     void printSpace() {
@@ -348,45 +332,31 @@ class KeyboardHandler : public BaseHandler {
 
         lastWordCount=0;               // start counting length of word again
         lastSpace=letterCount;         // keep track of this, our last, space
-        
-         
        
         // We don't need to print the space if we are at the very end of the line
-       
-        if (letterCount < 20)  { 
-          sendToScreen(' ');                // go figure out where to put it on the display
-        }
+        sendToScreen(0);                // go figure out where to put it on the display
+      
     }
       
-    /*****************************************************/
-    /* @brief Print the Puctuation                       */
-    /*****************************************************/ 
-    void printPunctuation()   {
-        // Punctuation marks are made up of more dits and dahs than
-        // letters and numbers. Rather than extend the character array
-        // out to reach these higher numbers we will simply check for
-        // them here. This function only gets called when myNum is greater than 116
-        char printChar = '#';    // Should not get here     
-       
-       if(myNum == 246) {
-             printChar = '$';
-       }
-        
-        sendToScreen(printChar);          // Go figure out where to put it on the display
-      }
-
+      
 
     /*****************************************************/
     /* @brief Send the char to the screen                */
     /*****************************************************/       
-      void sendToScreen(char printChar) {
- 
-        if (letterCount == lineEnd)  {
-          Keyboard.println();  
+      void sendToScreen(int mNum) {
+        char printChar = '#';    // Should not get here     
+       
+        if(myNum == 246) {
+             printChar = '$';
         } else {
-          Keyboard.print(printChar); // Print our character at the current cursor location
+            printChar = (char) mySet[mNum];
         }
-        Keyboard.releaseAll();
+      
+       if (letterCount == lineEnd)  {
+           WebSerial.send("cw_log", "\n" );
+        } else {
+           WebSerial.send("cw_log", printChar );
+        }
       }
 
 
@@ -395,7 +365,7 @@ class KeyboardHandler : public BaseHandler {
     /* @brief reset of all important variabelen          */
     /*****************************************************/   
       void resetDefaults()    {
-        downTime       = 0;         // Clear Input timers
+        downTime       = 0;         // Clear Input timersMorse CW text writer
         upTime         = 0;         // Clear Input timers
         startDownTime  = 0;         // Clear Input timers
         startUpTime    = 0;         // Clear Input timers
@@ -476,7 +446,7 @@ void setup() {
   if(myTimer.getKeyPressDuration() > 0 && myTimer.getKeyPressDuration()  < 500) {
      myObjectHandler = new MouseHandler();
   } else if (myTimer.getKeyPressDuration()  > 5000){
-     myObjectHandler = new KeyboardHandler();
+     myObjectHandler = new MorseDecoder();
   } else {
      myObjectHandler = new SpaceBarHandler();
   }   
