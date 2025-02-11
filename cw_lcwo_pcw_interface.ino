@@ -123,7 +123,7 @@ class SpaceBarHandler : public BaseHandler {
   private:
       
     void keyIsDown() override {
-            Keyboard.print(KEY_SPACE_BAR);      // print a space on the monitor window    
+            Keyboard.press(KEY_SPACE_BAR);      // print a space on the monitor window    
          }
 
     void keyIsUp() override {
